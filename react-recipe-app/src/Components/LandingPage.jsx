@@ -1,8 +1,13 @@
 import "./HomePage.css"
 import React from "react";
+import Navbar from "./Navbar";
+import Sidebar from "./Sidebar";
 const LandingPage = () => {
     return ( 
-     <div><p>hello</p></div>
+     <div>
+        <div></div>
+        <div><Sidebar/></div>
+     </div>
     );
 }
  

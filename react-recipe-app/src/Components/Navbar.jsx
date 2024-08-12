@@ -46,7 +46,7 @@ function Navbar() {
           InputProps={{
             startAdornment: <SearchIcon />,
           }}
-          style={{ marginRight: '16px', width: '300px' }}
+          style={{ marginRight: '16px', width: '100px' }}
         />
 
         {/* User Menu */}
