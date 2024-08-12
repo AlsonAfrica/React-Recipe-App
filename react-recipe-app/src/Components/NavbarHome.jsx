@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import {
   AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem, useMediaQuery, useTheme,
-  Dialog, DialogTitle, DialogContent, TextField, DialogActions, Tab, Tabs, Divider
+  Dialog, DialogTitle, DialogContent, TextField, DialogActions, Tab, Tabs, Divider, CircularProgress
 } from '@mui/material';
 import { keyframes } from '@emotion/react';
 import { GiCampCookingPot } from "react-icons/gi";
 import MenuIcon from '@mui/icons-material/Menu';
 import { GiArchiveRegister } from "react-icons/gi";
 import { SiGnuprivacyguard } from "react-icons/si";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-// Define the bounce keyframe animation
 const bounce = keyframes`
   0%, 20%, 50%, 80%, 100% {
     transform: translateY(0);
@@ -27,9 +28,18 @@ function NavbarHome() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [openTermsDialog, setOpenTermsDialog] = useState(false);
-  const [openAuthDialog, setOpenAuthDialog] = useState(false); // New state for auth dialog
+  const [openAuthDialog, setOpenAuthDialog] = useState(false);
   const [newColor, setNewColor] = useState('#ffffff');
-  const [authTab, setAuthTab] = useState(0); // Tab state for auth dialog
+  const [authTab, setAuthTab] = useState(0);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
   const open = Boolean(anchorEl);
 
   const theme = useTheme();
@@ -77,6 +87,53 @@ function NavbarHome() {
 
   const handleAuthTabChange = (event, newValue) => {
     setAuthTab(newValue);
+  };
+
+  const handleRegister = async () => {
+    setLoading(true);
+    setSuccessMessage('');
+    setErrorMessage('');
+
+    try {
+      await axios.post('http://localhost:5001/users', {
+        username,
+        email,
+        password
+      });
+      
+      setSuccessMessage('User registered successfully! Please login.');
+      setAuthTab(0); // Switch to login tab
+      setUsername('');
+      setEmail('');
+      setPassword('');
+    } catch (error) {
+      console.error('Error registering user:', error);
+      setErrorMessage('Failed to register user.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogin = async () => {
+    setLoading(true);
+    setSuccessMessage('');
+    setErrorMessage('');
+
+    try {
+      const response = await axios.get(`http://localhost:5001/users?username=${loginUsername}&password=${loginPassword}`);
+      if (response.data.length > 0) {
+        // Credentials are correct
+        navigate('/LandingPage');
+      } else {
+        // Incorrect credentials
+        setErrorMessage('Incorrect username or password. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      setErrorMessage('Failed to log in. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -127,7 +184,7 @@ function NavbarHome() {
                     animation: `${bounce} 1s ease` 
                   } 
                 }}
-                onClick={handleAuthOpen} // Updated button
+                onClick={handleAuthOpen}
               >
                 Try Me!
               </Button>
@@ -188,7 +245,7 @@ function NavbarHome() {
         <DialogTitle>Terms and Conditions</DialogTitle>
         <DialogContent>
           <Typography variant="body1" sx={{ marginTop: 2 }}>
-            <strong>1. Introduction</strong>
+          <strong>1. Introduction</strong>
             <br />
             Welcome to YumYard! These Terms and Conditions govern your use of our website and services. By using YumYard, you agree to comply with and be bound by these terms. If you do not agree to these terms, please do not use our services.
             <br /><br />
@@ -213,35 +270,28 @@ function NavbarHome() {
             </ul>
             <strong>2.3. Data Security</strong>
             <br />
-            We implement industry-standard security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet or electronic storage is completely secure, and we cannot guarantee absolute security.
+            We implement appropriate security measures to protect your personal information from unauthorized access, disclosure, alteration, or destruction. However, no method of transmission over the Internet or electronic storage is 100% secure.
             <br /><br />
-            <strong>2.4. Sharing Your Information</strong>
+            <strong>3. User Responsibilities</strong>
             <br />
-            We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as required by law or to provide our services. We may share information with trusted partners who assist us in operating our website or conducting our business, provided those parties agree to keep this information confidential.
+            As a user of YumYard, you agree to:
+            <ul>
+              <li>Provide accurate and current information</li>
+              <li>Not engage in any activities that could harm or disrupt our services</li>
+              <li>Comply with all applicable laws and regulations</li>
+            </ul>
+            <br />
+            <strong>4. Limitation of Liability</strong>
+            <br />
+            To the extent permitted by law, YumYard shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of our services.
             <br /><br />
-            <strong>2.5. Your Choices</strong>
+            <strong>5. Changes to Terms</strong>
             <br />
-            You have the right to access, correct, or delete your personal information. You can request changes to your data by contacting us at [your contact email].
+            We reserve the right to update or modify these Terms and Conditions at any time. Any changes will be effective immediately upon posting. Your continued use of our services after such changes constitutes your acceptance of the revised terms.
             <br /><br />
-            <strong>2.6. Cookies and Tracking Technologies</strong>
+            <strong>6. Contact Us</strong>
             <br />
-            We use cookies and similar tracking technologies to enhance your user experience. Cookies are small files that are stored on your device. You can set your browser to refuse cookies or to alert you when cookies are being sent. However, some parts of our website may not function properly if you disable cookies.
-            <br /><br />
-            <strong>2.7. Changes to This Policy</strong>
-            <br />
-            We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting the new policy on our website. Your continued use of our services after such changes constitutes your acceptance of the updated policy.
-            <br /><br />
-            <strong>3. Contact Us</strong>
-            <br />
-            If you have any questions or concerns about our Terms and Conditions or Privacy Policy, please contact us at [your contact email].
-            <br /><br />
-            <strong>4. Governing Law</strong>
-            <br />
-            These Terms and Conditions are governed by and construed in accordance with the laws of [your jurisdiction]. Any disputes arising from these terms shall be resolved in the courts of [your jurisdiction].
-            <br /><br />
-            <strong>5. Effective Date</strong>
-            <br />
-            These Terms and Conditions are effective as of [12/08/2024].
+            If you have any questions or concerns regarding these Terms and Conditions, please contact us at support@yumyard.com.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -249,24 +299,25 @@ function NavbarHome() {
         </DialogActions>
       </Dialog>
 
-      {/* Dialog for registration and login */}
+      {/* Dialog for authentication */}
       <Dialog open={openAuthDialog} onClose={handleAuthClose} fullWidth maxWidth="sm">
-        <DialogTitle>Jump In</DialogTitle>
-        <Tabs value={authTab} onChange={handleAuthTabChange} aria-label="authentication tabs">
-          <Tab label="Login" />
-          <Tab label="Register" />
-        </Tabs>
-        <Divider />
+        <DialogTitle>Authentication</DialogTitle>
         <DialogContent>
-          {authTab === 0 && (
-            <>
-              <Typography variant="h6">Login <SiGnuprivacyguard /></Typography>
+          <Tabs value={authTab} onChange={handleAuthTabChange} aria-label="authentication tabs">
+            <Tab label="Login" />
+            <Tab label="Register" />
+          </Tabs>
+          {authTab === 0 ? (
+            <Box sx={{ padding: 2 }}>
               <TextField
+                autoFocus
                 margin="dense"
                 label="Username"
                 type="text"
                 fullWidth
                 variant="standard"
+                value={loginUsername}
+                onChange={(e) => setLoginUsername(e.target.value)}
               />
               <TextField
                 margin="dense"
@@ -274,18 +325,23 @@ function NavbarHome() {
                 type="password"
                 fullWidth
                 variant="standard"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
               />
-            </>
-          )}
-          {authTab === 1 && (
-            <>
-              <Typography variant="h6">Register <GiArchiveRegister /></Typography>
+              {loading && <CircularProgress />}
+              {errorMessage && <Typography color="error">{errorMessage}</Typography>}
+            </Box>
+          ) : (
+            <Box sx={{ padding: 2 }}>
               <TextField
+                autoFocus
                 margin="dense"
                 label="Username"
                 type="text"
                 fullWidth
                 variant="standard"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
               <TextField
                 margin="dense"
@@ -293,6 +349,8 @@ function NavbarHome() {
                 type="email"
                 fullWidth
                 variant="standard"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <TextField
                 margin="dense"
@@ -300,13 +358,22 @@ function NavbarHome() {
                 type="password"
                 fullWidth
                 variant="standard"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
-            </>
+              {loading && <CircularProgress />}
+              {successMessage && <Typography color="success">{successMessage}</Typography>}
+              {errorMessage && <Typography color="error">{errorMessage}</Typography>}
+            </Box>
           )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAuthClose}>Close</Button>
-          <Button onClick={() => { /* Handle form submission */ }}>Submit</Button>
+          {authTab === 0 ? (
+            <Button onClick={handleLogin}>Login</Button>
+          ) : (
+            <Button onClick={handleRegister}>Register</Button>
+          )}
         </DialogActions>
       </Dialog>
     </>
@@ -314,5 +381,3 @@ function NavbarHome() {
 }
 
 export default NavbarHome;
-
-
