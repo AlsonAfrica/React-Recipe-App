@@ -1,0 +1,54 @@
+*{
+    margin: 0;
+    padding:0;
+    box-sizing: border-box;
+}
+/* .nav{
+    height:90px
+} */
+.wrapper{
+    /* background-color: rgb(71, 211, 28); */
+    height:100vh;
+    display: flex;
+    flex-direction: column;
+}
+.nav{
+    margin-top: 100px;
+/* background-color: aqua; */
+height:7%;
+width:100vw;
+}
+/* Api section */
+.Text-api{
+    text-align: center;
+}
+.api-containers{
+    margin-top: 50px;
+}
+.Searchbar{
+    margin-top: 20px;
+}
+.Text-api h1{
+    font-size:80px ;
+}
+.Text-api p{
+    font-size:30px;
+}
+.api-list{
+    display: flex;
+    flex-direction: column;
+}
+
+/* Review Card styling */
+.Review-cards{
+  margin-top: 50px;
+}
+.Review-cards h2{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* .container{
+     height: 10%;
+     background-color: azure;
+} */

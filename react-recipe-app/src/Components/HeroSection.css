@@ -1,0 +1,53 @@
+/* Hero section styling */
+.section{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:10px;
+    padding:50px;
+}
+.column1{
+    width:50%
+    
+}
+.column2{
+    width: 50%;
+    display: grid;
+    /* grid-template-columns: repeat(3,1fr);
+    gap:1.75vw; */
+}
+.information{
+    text-align: left;
+    margin-top: .5em;
+    font-size: 1.5em;
+    line-height: 1.2;
+    margin-bottom: 1.2em;
+}
+/* Define the vibrate animation */
+@keyframes vibrate {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-2px); }
+    40% { transform: translateX(2px); }
+    60% { transform: translateX(-2px); }
+    80% { transform: translateX(2px); }
+    100% { transform: translateX(0); }
+  }
+  
+  
+ 
+  .btn-explore-now {
+    border: none;
+    outline: none;
+    background-color:chocolate;
+    color:white;
+    padding: .5em 1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 1.1em;
+    border-radius: 10px;
+    animation: vibrate 0.5s ease-in-out;
+    animation-iteration-count: infinite; 
+    box-shadow: 0 2px 6px black;
+    font-weight: bold;
+  }
+  
