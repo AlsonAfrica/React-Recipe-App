@@ -1,3 +1,7 @@
+.wrapper-page{
+  background-color: rgb(36, 204, 210);
+}
+
 .Recipe-Cards{
     display: flex;
     justify-content: center;

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Divider, Typography,
   useMediaQuery, useTheme, AppBar, Toolbar, TextField, Menu, MenuItem, Box, Collapse, Dialog, 
@@ -19,7 +20,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom'; 
 import { GiCampCookingPot } from "react-icons/gi";
 
-function Sidebar({ onFormSubmit }) {
+function Sidebar() {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDinner, setOpenDinner] = useState(false);
@@ -33,13 +34,17 @@ function Sidebar({ onFormSubmit }) {
     preparationTime: '',
     cookingTime: '',
     servings: '',
-    image: null
+    image: ''  // Change to URL
   });
   const [imagePreview, setImagePreview] = useState(null);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const navigate = useNavigate();
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  useEffect(() => {
+    // Optionally, fetch recipes on component mount
+    fetchRecipes();
+  }, []);
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -55,7 +60,6 @@ function Sidebar({ onFormSubmit }) {
 
   const handleLogout = () => {
     // Add your logout logic here (e.g., clearing tokens or user data)
-    
     handleProfileClose();
     navigate('/'); // Redirect to home page
   };
@@ -82,7 +86,7 @@ function Sidebar({ onFormSubmit }) {
       preparationTime: '',
       cookingTime: '',
       servings: '',
-      image: null
+      image: ''  // Reset to empty string
     });
     setImagePreview(null);
   };
@@ -92,22 +96,32 @@ function Sidebar({ onFormSubmit }) {
     setRecipeData({ ...recipeData, [name]: value });
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setRecipeData({ ...recipeData, image: file });
-    
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+  const handleSave = async () => {
+    try {
+      // Prepare the data
+      const payload = { ...recipeData };
+
+      // Send a POST request to the API
+      await axios.post('http://localhost:5001/recipes', payload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      handleDialogClose();
+      fetchRecipes(); // Optionally refresh recipes list
+    } catch (error) {
+      console.error('Error saving recipe:', error);
     }
   };
 
-  const handleSave = () => {
-    onFormSubmit(recipeData); 
-    handleDialogClose();
+  const fetchRecipes = async () => {
+    try {
+      const response = await axios.get('http://localhost:5001/recipes');
+      console.log(response.data); // Handle the fetched recipes as needed
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
+    }
   };
 
   return (
@@ -267,11 +281,13 @@ function Sidebar({ onFormSubmit }) {
               name="category"
               value={recipeData.category}
               onChange={handleChange}
+              label="Category"
             >
-              <SelectMenuItem value="Breakfast">Breakfast</SelectMenuItem>
+              <SelectMenuItem value="BreakFast">BreakFast</SelectMenuItem>
               <SelectMenuItem value="Lunch">Lunch</SelectMenuItem>
               <SelectMenuItem value="Dinner">Dinner</SelectMenuItem>
-              <SelectMenuItem value="Snack">Snack</SelectMenuItem>
+              <SelectMenuItem value="Appetiser">Appetiser</SelectMenuItem>
+              <SelectMenuItem value="Beverages">Beverages</SelectMenuItem>
             </Select>
           </FormControl>
           <TextField
@@ -279,8 +295,6 @@ function Sidebar({ onFormSubmit }) {
             label="Ingredients"
             type="text"
             fullWidth
-            multiline
-            rows={4}
             name="ingredients"
             value={recipeData.ingredients}
             onChange={handleChange}
@@ -290,8 +304,6 @@ function Sidebar({ onFormSubmit }) {
             label="Instructions"
             type="text"
             fullWidth
-            multiline
-            rows={4}
             name="instructions"
             value={recipeData.instructions}
             onChange={handleChange}
@@ -323,23 +335,26 @@ function Sidebar({ onFormSubmit }) {
             value={recipeData.servings}
             onChange={handleChange}
           />
-          <input
-            accept="image/*"
-            style={{ display: 'none' }}
-            id="image-upload"
-            type="file"
-            onChange={handleFileChange}
+          <TextField
+            margin="dense"
+            label="Image URL"
+            type="url"
+            fullWidth
+            name="image"
+            value={recipeData.image}
+            onChange={handleChange}
           />
-          <label htmlFor="image-upload">
-            <Button variant="contained" component="span">
-              Upload Image
-            </Button>
-          </label>
-          {imagePreview && <img src={imagePreview} alt="Preview" style={{ width: '100%', marginTop: '16px' }} />}
+          {imagePreview && (
+            <img src={imagePreview} alt="Image Preview" style={{ width: '100%', marginTop: '16px' }} />
+          )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogClose}>Cancel</Button>
-          <Button onClick={handleSave}>Save</Button>
+          <Button onClick={handleDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSave} color="primary">
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
     </>

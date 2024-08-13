@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardMedia, Typography, IconButton, CardActions, Button, Box, TextField } from '@mui/material';
+import {
+  Card, CardContent, CardMedia, Typography, IconButton, CardActions, Button, Box, TextField
+} from '@mui/material';
 import FlipIcon from '@mui/icons-material/Flip';
 
 const FlipCard = ({ data, onSave, onDelete }) => {
@@ -49,7 +51,7 @@ const FlipCard = ({ data, onSave, onDelete }) => {
         <CardMedia
           component="img"
           height="140"
-          image={URL.createObjectURL(data.image)}
+          image={data.image}  // Directly use URL if it's a valid image URL
           alt="Recipe Image"
           sx={{
             objectFit: 'cover',
