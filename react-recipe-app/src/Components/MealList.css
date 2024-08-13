@@ -1,0 +1,55 @@
+/* MealList.css */
+
+/* MealList.css */
+
+.meal-container {
+    margin-top: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+  }
+  
+  .meal-item {
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .meal-image {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 8px;
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .modal-content h3 {
+    margin-top: 0;
+  }
+  
+  .modal-content p {
+    font-size: 14px; /* Adjust this value to make the font size smaller */
+  }
+  
+  .modal-content button {
+    margin-top: 10px;
+  }
+  

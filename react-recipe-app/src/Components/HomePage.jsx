@@ -6,6 +6,7 @@ import HeroSection from "./HeroSection";
 import SearchBarHome from "./HomeSearchBar";
 import MealList from "./MealList";
 import ReviewList from "./ReviewList";
+import Footer from "./footer";
 
 export const HomePage = () => {
     return (
@@ -20,7 +21,7 @@ export const HomePage = () => {
                 <div className="Text-api">
                     <p className="Heading-api">View what others have been cooking</p>
                     <h1>Our Most Loved Dishes</h1>
-                    <span>Explore our collection of the most popular and delicious recipes, curated for your enjoyment.</span>
+                    <span>Click on the image to view the recipe</span>
                     {/* <div className="Searchbar"><SearchBarHome/></div>  */}
                     <div className="api-list"><MealList/></div>
                 </div>
@@ -29,7 +30,7 @@ export const HomePage = () => {
                     <ReviewList/>
                 </div>
             </div>
-            <div className="footer"></div>
+            <Footer/>
         </div>
     );
 }

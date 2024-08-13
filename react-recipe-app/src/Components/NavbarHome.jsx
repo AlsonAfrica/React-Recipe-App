@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import {
   AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem, useMediaQuery, useTheme,
-  Dialog, DialogTitle, DialogContent, TextField, DialogActions, Tab, Tabs, Divider, CircularProgress
+  Dialog, DialogTitle, DialogContent, TextField, DialogActions, Tab, Tabs, Divider, CircularProgress,
+  Snackbar, Alert
 } from '@mui/material';
 import { keyframes } from '@emotion/react';
 import { GiCampCookingPot } from "react-icons/gi";
 import MenuIcon from '@mui/icons-material/Menu';
-import { GiArchiveRegister } from "react-icons/gi";
-import { SiGnuprivacyguard } from "react-icons/si";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,6 +28,7 @@ function NavbarHome() {
   const [openDialog, setOpenDialog] = useState(false);
   const [openTermsDialog, setOpenTermsDialog] = useState(false);
   const [openAuthDialog, setOpenAuthDialog] = useState(false);
+  const [openSuccessDialog, setOpenSuccessDialog] = useState(false); // New state for success dialog
   const [newColor, setNewColor] = useState('#ffffff');
   const [authTab, setAuthTab] = useState(0);
   const [username, setUsername] = useState('');
@@ -37,8 +37,9 @@ function NavbarHome() {
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // New state for snackbar
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
 
@@ -90,6 +91,11 @@ function NavbarHome() {
   };
 
   const handleRegister = async () => {
+    if (!username || !email || !password) {
+      setErrorMessage('All fields are required.');
+      return;
+    }
+
     setLoading(true);
     setSuccessMessage('');
     setErrorMessage('');
@@ -100,12 +106,13 @@ function NavbarHome() {
         email,
         password
       });
-      
-      setSuccessMessage('User registered successfully! Please login.');
-      setAuthTab(0); // Switch to login tab
+
+      setSuccessMessage('Registration successful!');
       setUsername('');
       setEmail('');
       setPassword('');
+      setAuthTab(0); // Switch to login tab
+      setOpenSuccessDialog(true); // Open success dialog
     } catch (error) {
       console.error('Error registering user:', error);
       setErrorMessage('Failed to register user.');
@@ -115,6 +122,11 @@ function NavbarHome() {
   };
 
   const handleLogin = async () => {
+    if (!loginUsername || !loginPassword) {
+      setErrorMessage('Both username and password are required.');
+      return;
+    }
+
     setLoading(true);
     setSuccessMessage('');
     setErrorMessage('');
@@ -122,10 +134,12 @@ function NavbarHome() {
     try {
       const response = await axios.get(`http://localhost:5001/users?username=${loginUsername}&password=${loginPassword}`);
       if (response.data.length > 0) {
-        // Credentials are correct
+        setSuccessMessage('Login successful!');
+        setLoginUsername('');
+        setLoginPassword('');
+        setOpenSuccessDialog(true); // Open success dialog
         navigate('/LandingPage');
       } else {
-        // Incorrect credentials
         setErrorMessage('Incorrect username or password. Please try again.');
       }
     } catch (error) {
@@ -134,6 +148,10 @@ function NavbarHome() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -245,7 +263,7 @@ function NavbarHome() {
         <DialogTitle>Terms and Conditions</DialogTitle>
         <DialogContent>
           <Typography variant="body1" sx={{ marginTop: 2 }}>
-          <strong>1. Introduction</strong>
+            <strong>1. Introduction</strong>
             <br />
             Welcome to YumYard! These Terms and Conditions govern your use of our website and services. By using YumYard, you agree to comply with and be bound by these terms. If you do not agree to these terms, please do not use our services.
             <br /><br />
@@ -257,41 +275,41 @@ function NavbarHome() {
             <ul>
               <li>Your name</li>
               <li>Email address</li>
-              <li>Contact information</li>
-              <li>Usage data</li>
+              <li>Phone number</li>
+              <li>Payment information</li>
             </ul>
             <strong>2.2. How We Use Your Information</strong>
             <br />
-            We use your personal information to:
+            We use the information we collect to:
             <ul>
               <li>Provide and improve our services</li>
-              <li>Communicate with you regarding updates, promotions, and feedback</li>
-              <li>Ensure the security and integrity of our services</li>
+              <li>Respond to your inquiries and support needs</li>
+              <li>Send you updates and promotional materials</li>
             </ul>
-            <strong>2.3. Data Security</strong>
+            <strong>2.3. Data Protection</strong>
             <br />
-            We implement appropriate security measures to protect your personal information from unauthorized access, disclosure, alteration, or destruction. However, no method of transmission over the Internet or electronic storage is 100% secure.
+            We take reasonable measures to protect your personal information from unauthorized access, disclosure, alteration, or destruction.
             <br /><br />
             <strong>3. User Responsibilities</strong>
             <br />
             As a user of YumYard, you agree to:
             <ul>
-              <li>Provide accurate and current information</li>
-              <li>Not engage in any activities that could harm or disrupt our services</li>
-              <li>Comply with all applicable laws and regulations</li>
+              <li>Provide accurate and complete information</li>
+              <li>Use our services in accordance with applicable laws and regulations</li>
+              <li>Not engage in any activity that may harm or disrupt our services</li>
             </ul>
-            <br />
+            <br /><br />
             <strong>4. Limitation of Liability</strong>
             <br />
-            To the extent permitted by law, YumYard shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of our services.
+            YumYard is not liable for any indirect, incidental, or consequential damages arising from your use of our services.
             <br /><br />
             <strong>5. Changes to Terms</strong>
             <br />
-            We reserve the right to update or modify these Terms and Conditions at any time. Any changes will be effective immediately upon posting. Your continued use of our services after such changes constitutes your acceptance of the revised terms.
+            We may update these Terms and Conditions from time to time. We will notify you of any significant changes by posting the updated terms on our website.
             <br /><br />
             <strong>6. Contact Us</strong>
             <br />
-            If you have any questions or concerns regarding these Terms and Conditions, please contact us at support@yumyard.com.
+            If you have any questions or concerns about these Terms and Conditions, please contact us at support@yumyard.com.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -300,17 +318,21 @@ function NavbarHome() {
       </Dialog>
 
       {/* Dialog for authentication */}
-      <Dialog open={openAuthDialog} onClose={handleAuthClose} fullWidth maxWidth="sm">
+      <Dialog open={openAuthDialog} onClose={handleAuthClose}>
         <DialogTitle>Authentication</DialogTitle>
         <DialogContent>
-          <Tabs value={authTab} onChange={handleAuthTabChange} aria-label="authentication tabs">
+          <Tabs
+            value={authTab}
+            onChange={handleAuthTabChange}
+            aria-label="authentication tabs"
+          >
             <Tab label="Login" />
             <Tab label="Register" />
           </Tabs>
+          <Divider />
           {authTab === 0 ? (
-            <Box sx={{ padding: 2 }}>
+            <Box sx={{ marginTop: 2 }}>
               <TextField
-                autoFocus
                 margin="dense"
                 label="Username"
                 type="text"
@@ -328,13 +350,14 @@ function NavbarHome() {
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
               />
-              {loading && <CircularProgress />}
-              {errorMessage && <Typography color="error">{errorMessage}</Typography>}
+              {errorMessage && (
+                <Typography color="error" variant="body2">{errorMessage}</Typography>
+              )}
+              {loading && <CircularProgress sx={{ marginTop: 2 }} />}
             </Box>
           ) : (
-            <Box sx={{ padding: 2 }}>
+            <Box sx={{ marginTop: 2 }}>
               <TextField
-                autoFocus
                 margin="dense"
                 label="Username"
                 type="text"
@@ -361,21 +384,53 @@ function NavbarHome() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              {loading && <CircularProgress />}
-              {successMessage && <Typography color="success">{successMessage}</Typography>}
-              {errorMessage && <Typography color="error">{errorMessage}</Typography>}
+              {errorMessage && (
+                <Typography color="error" variant="body2">{errorMessage}</Typography>
+              )}
+              {successMessage && (
+                <Typography color="success" variant="body2">{successMessage}</Typography>
+              )}
+              {loading && <CircularProgress sx={{ marginTop: 2 }} />}
             </Box>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleAuthClose}>Close</Button>
           {authTab === 0 ? (
-            <Button onClick={handleLogin}>Login</Button>
+            <Button onClick={handleLogin} disabled={loading}>Login</Button>
           ) : (
-            <Button onClick={handleRegister}>Register</Button>
+            <Button onClick={handleRegister} disabled={loading}>Register</Button>
           )}
+          <Button onClick={handleAuthClose}>Cancel</Button>
         </DialogActions>
       </Dialog>
+
+      {/* Dialog for success message */}
+      <Dialog open={openSuccessDialog} onClose={() => setOpenSuccessDialog(false)}>
+        <DialogTitle>Success</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            {successMessage}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenSuccessDialog(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Snackbar for error messages */}
+      <Snackbar 
+        open={snackbarOpen} 
+        autoHideDuration={6000} 
+        onClose={handleSnackbarClose}
+      >
+        <Alert 
+          onClose={handleSnackbarClose} 
+          severity="error" 
+          sx={{ width: '100%' }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

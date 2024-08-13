@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import {
   Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Divider, Typography,
-  useMediaQuery, useTheme, AppBar, Toolbar, TextField, Menu, MenuItem, Box, Collapse
+  useMediaQuery, useTheme, AppBar, Toolbar, TextField, Menu, MenuItem, Box, Collapse, Dialog, 
+  DialogTitle, DialogContent, DialogActions, Button, Select, MenuItem as SelectMenuItem, InputLabel, FormControl
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import BookIcon from '@mui/icons-material/Book';
@@ -11,18 +12,34 @@ import AlarmOnIcon from '@mui/icons-material/AlarmOn';
 import AppetizerIcon from '@mui/icons-material/StarBorder';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import LocalBarIcon from '@mui/icons-material/LocalBar'; // Import LocalBarIcon for Beverages
+import LocalBarIcon from '@mui/icons-material/LocalBar'; 
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import AddIcon from '@mui/icons-material/Add'; // Import AddIcon for the floating button
+import AddIcon from '@mui/icons-material/Add'; 
+import { useNavigate } from 'react-router-dom'; 
+import { GiCampCookingPot } from "react-icons/gi";
 
-function Sidebar() {
+function Sidebar({ onFormSubmit }) {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDinner, setOpenDinner] = useState(false);
   const [openLunch, setOpenLunch] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [recipeData, setRecipeData] = useState({
+    name: '',
+    category: '',
+    ingredients: '',
+    instructions: '',
+    preparationTime: '',
+    cookingTime: '',
+    servings: '',
+    image: null
+  });
+  const [imagePreview, setImagePreview] = useState(null);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -37,8 +54,10 @@ function Sidebar() {
   };
 
   const handleLogout = () => {
-    // Handle logout logic here
+    // Add your logout logic here (e.g., clearing tokens or user data)
+    
     handleProfileClose();
+    navigate('/'); // Redirect to home page
   };
 
   const handleDinnerClick = () => {
@@ -47,6 +66,48 @@ function Sidebar() {
 
   const handleLunchClick = () => {
     setOpenLunch(!openLunch);
+  };
+
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+    setRecipeData({
+      name: '',
+      category: '',
+      ingredients: '',
+      instructions: '',
+      preparationTime: '',
+      cookingTime: '',
+      servings: '',
+      image: null
+    });
+    setImagePreview(null);
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setRecipeData({ ...recipeData, [name]: value });
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setRecipeData({ ...recipeData, image: file });
+    
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSave = () => {
+    onFormSubmit(recipeData); 
+    handleDialogClose();
   };
 
   return (
@@ -110,7 +171,7 @@ function Sidebar() {
             open={Boolean(anchorEl)}
             onClose={handleProfileClose}
           >
-            <MenuItem onClick={() => { handleProfileClose(); /* Open settings dialog */ }}>Settings</MenuItem>
+            <MenuItem onClick={() => { handleProfileClose();}}>Settings</MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Toolbar>
@@ -131,8 +192,8 @@ function Sidebar() {
         }}
       >
         <Toolbar>
-          <Typography variant="h6" component="div" style={{ padding: '16px', fontWeight: 'bold' }}>
-            Recipe App
+          <Typography variant="h6" component="div" style={{ padding: '16px', fontWeight: 'bold', color:'chocolate'}}>
+            Yum Yard Recipe App <GiCampCookingPot />
           </Typography>
         </Toolbar>
         <Divider />
@@ -180,37 +241,107 @@ function Sidebar() {
               </ListItem>
             </List>
           </Collapse>
-          <ListItem button>
-            <ListItemIcon><AlarmOnIcon /></ListItemIcon>
-            <ListItemText primary="Breakfast" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon><AppetizerIcon /></ListItemIcon>
-            <ListItemText primary="Appetizers" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon><LocalBarIcon /></ListItemIcon> {/* Add Beverages icon */}
-            <ListItemText primary="Beverages" />
+          <ListItem button onClick={handleDialogOpen}>
+            <ListItemIcon><AddIcon /></ListItemIcon>
+            <ListItemText primary="Add Recipe" />
           </ListItem>
         </List>
       </Drawer>
 
-      {/* Floating Action Button */}
-      <IconButton
-        sx={{
-          position: 'fixed',
-          bottom: 16,
-          right: 16,
-          backgroundColor: theme.palette.primary.main,
-          color: '#ffffff',
-          '&:hover': {
-            backgroundColor: theme.palette.primary.dark,
-          },
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        <AddIcon />
-      </IconButton>
+      <Dialog open={dialogOpen} onClose={handleDialogClose}>
+        <DialogTitle>Add Recipe</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Name"
+            type="text"
+            fullWidth
+            name="name"
+            value={recipeData.name}
+            onChange={handleChange}
+          />
+          <FormControl fullWidth margin="dense">
+            <InputLabel>Category</InputLabel>
+            <Select
+              name="category"
+              value={recipeData.category}
+              onChange={handleChange}
+            >
+              <SelectMenuItem value="Breakfast">Breakfast</SelectMenuItem>
+              <SelectMenuItem value="Lunch">Lunch</SelectMenuItem>
+              <SelectMenuItem value="Dinner">Dinner</SelectMenuItem>
+              <SelectMenuItem value="Snack">Snack</SelectMenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            margin="dense"
+            label="Ingredients"
+            type="text"
+            fullWidth
+            multiline
+            rows={4}
+            name="ingredients"
+            value={recipeData.ingredients}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            label="Instructions"
+            type="text"
+            fullWidth
+            multiline
+            rows={4}
+            name="instructions"
+            value={recipeData.instructions}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            label="Preparation Time"
+            type="text"
+            fullWidth
+            name="preparationTime"
+            value={recipeData.preparationTime}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            label="Cooking Time"
+            type="text"
+            fullWidth
+            name="cookingTime"
+            value={recipeData.cookingTime}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            label="Servings"
+            type="text"
+            fullWidth
+            name="servings"
+            value={recipeData.servings}
+            onChange={handleChange}
+          />
+          <input
+            accept="image/*"
+            style={{ display: 'none' }}
+            id="image-upload"
+            type="file"
+            onChange={handleFileChange}
+          />
+          <label htmlFor="image-upload">
+            <Button variant="contained" component="span">
+              Upload Image
+            </Button>
+          </label>
+          {imagePreview && <img src={imagePreview} alt="Preview" style={{ width: '100%', marginTop: '16px' }} />}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose}>Cancel</Button>
+          <Button onClick={handleSave}>Save</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

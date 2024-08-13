@@ -59,6 +59,36 @@
       "username": "kabelo",
       "email": "kabelo@gmail.com",
       "password": "123"
+    },
+    {
+      "id": "cc50",
+      "username": "Neo",
+      "email": "nhlakanipho@gmail.com",
+      "password": "123"
+    },
+    {
+      "id": "7de0",
+      "username": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "af0a",
+      "username": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "3dd7",
+      "username": "Alson",
+      "email": "nhlakaniphoradebe337@gmail.com",
+      "password": "123"
+    },
+    {
+      "id": "8f88",
+      "username": "Neo",
+      "email": "Neo@gmail.com",
+      "password": "123"
     }
   ],
   "recipes": {

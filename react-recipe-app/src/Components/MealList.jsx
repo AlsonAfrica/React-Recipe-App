@@ -1,23 +1,20 @@
-// src/components/MealList.js
 import React, { useEffect, useState } from 'react';
-import { fetchMeals } from '../Components/mealService'; 
+import { fetchMeals } from '../Components/mealService';
+import './MealList.css'; // Import the CSS file for styling
 import SearchBarHome from './HomeSearchBar';
 
-function MealList() {
+const MealList = ({ searchTerm }) => {
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedMeal, setSelectedMeal] = useState(null); 
 
   useEffect(() => {
     const getMeals = async () => {
       try {
-        setLoading(true);
-        const data = await fetchMeals(searchTerm);
-        // Limit results to 20
-        setMeals((data.meals || []).slice(0, 24));
+        const mealsData = await fetchMeals(searchTerm);
+        setMeals(mealsData);
       } catch (error) {
-        setError('Failed to fetch meals');
+        console.error('Error fetching meals:', error);
       } finally {
         setLoading(false);
       }
@@ -26,46 +23,49 @@ function MealList() {
     getMeals();
   }, [searchTerm]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  const handleImageClick = (meal) => {
+    setSelectedMeal(meal); // Set the selected meal
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMeal(null); // Close the modal
+  };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div>
-      <SearchBarHome onChange={(value) => setSearchTerm(value)} />
-      <div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: '16px', 
-        justifyContent: 'center' 
-      }}>
+      <SearchBarHome /> {/* Assuming you have a search bar */}
+      <div className="meal-container">
         {meals.length > 0 ? (
           meals.map(meal => (
-            <div key={meal.idMeal} style={{
-              marginTop:"30px",  
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              maxWidth: '200px', 
-              textAlign: 'center'
-            }}>
-              <h2>{meal.strMeal}</h2>
-              <img
-                src={meal.strMealThumb}
-                alt={meal.strMeal}
-                style={{
-                  width: '100%', 
-                  height: 'auto', 
-                  borderRadius: '8px' 
-                }}
+            <div key={meal.id} className="meal-item">
+              <h2>{meal.name}</h2>
+              <img 
+                src={meal.image} 
+                alt={meal.name} 
+                className="meal-image"
+                onClick={() => handleImageClick(meal)}
               />
             </div>
           ))
         ) : (
-          <div>No meals found</div>
+          <p>No meals found.</p>
         )}
       </div>
+      {selectedMeal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>{selectedMeal.name}</h3>
+            <p>{selectedMeal.recipe}</p>
+            <button onClick={handleCloseModal}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default MealList;

@@ -2,15 +2,17 @@
 import React from 'react';
 import ReviewCard from './ReviewCard';
 import { Grid, useMediaQuery, useTheme } from '@mui/material';
-import Veronica from "../Review-images/Veronica.jpg";
+// import Veronica from "../Review-images/Veronica.jpg";
+import Kamo from "../Review-images/Kamo.jpg"
 import Nancy from "../Review-images/Nancy.jpg";
 import Chris from "../Review-images/Chris.jpg";
 import Neo from "../Review-images/Neo.jpg";
+import Jane from "../Review-images/Jane.jpg"
 
 const reviews = [
   {
-    picture: Veronica,
-    name: 'Veronica Doe',
+    picture: Kamo,
+    name: 'Kamo Mokoena',
     comment: 'Great product! Really loved it.',
   },
   {
@@ -19,8 +21,8 @@ const reviews = [
     comment: 'Good value for the price.',
   },
   {
-    picture: Chris,
-    name: 'Chris Johnson',
+    picture: Jane,
+    name: 'Jane Johnson',
     comment: 'The quality is top-notch!',
   },
   {

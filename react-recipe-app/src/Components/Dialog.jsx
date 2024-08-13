@@ -10,7 +10,7 @@ const handleRegister = async () => {
       });
       
       setSuccessMessage('User registered successfully!');
-      setOpenAuthDialog(false); // Close auth dialog
+      setOpenAuthDialog(false); 
       setUsername('');
       setEmail('');
       setPassword('');
