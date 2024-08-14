@@ -34,7 +34,7 @@ const reviews = [
 
 const ReviewList = () => {
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md')); // Change 'sm' to 'md' if needed
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md')); 
 
   return (
     <Grid container spacing={2} justifyContent="center">

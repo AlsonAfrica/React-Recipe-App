@@ -55,7 +55,7 @@ const LandingPage = () => {
   };
 
   return (
-    <div className='wrapper-page'style={{ backgroundColor: '#f0f0f0' }}>
+    <div className='wrapper-page'style={{ backgroundColor: 'chocolate', }}>
       <Navbar />
       <div style={{ display: 'flex' }}>
         <Sidebar onFormSubmit={handleFormSubmit} />

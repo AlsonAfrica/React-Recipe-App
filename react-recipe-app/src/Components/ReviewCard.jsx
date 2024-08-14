@@ -24,8 +24,20 @@ const ReviewCard = ({ picture, name, comment }) => {
         boxShadow: 3,
         borderRadius: 2,
         overflow: 'hidden',
+        position: 'relative', // Use relative positioning for animation
         animation: `${moveLeftToRight} 10s linear infinite`,
-        margin: '8px', // Optional: Add margin to space out cards
+        margin: '8px',
+        // Add styles to prevent overflow and ensure the animation stays in place
+        '&:before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'transparent',
+          zIndex: -1,
+        },
       }}
     >
       <CardMedia

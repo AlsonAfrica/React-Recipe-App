@@ -259,10 +259,10 @@ function NavbarHome() {
       </Dialog>
 
       {/* Dialog for terms and conditions */}
-      <Dialog open={openTermsDialog} onClose={handleTermsClose}>
+      <Dialog open={openTermsDialog} onClose={handleTermsClose} >
         <DialogTitle>Terms and Conditions</DialogTitle>
         <DialogContent>
-          <Typography variant="body1" sx={{ marginTop: 2 }}>
+          <Typography variant="body1" sx={{ marginTop: 2, }}>
             <strong>1. Introduction</strong>
             <br />
             Welcome to YumYard! These Terms and Conditions govern your use of our website and services. By using YumYard, you agree to comply with and be bound by these terms. If you do not agree to these terms, please do not use our services.

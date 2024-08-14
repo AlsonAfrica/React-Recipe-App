@@ -5,7 +5,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 
 function Navbar() {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [bgColor, setBgColor] = useState('#ffffff'); // Default background color
+  const [bgColor, setBgColor] = useState('#ffffff'); 
   const open = Boolean(anchorEl);
 
   const handleMenuClick = (event) => {
@@ -17,9 +17,9 @@ function Navbar() {
   };
 
   const handleSettingsClick = () => {
-    // Change the background color
+
     setBgColor(bgColor === '#ffffff' ? '#f0f0f0' : '#ffffff');
-    handleMenuClose(); // Close the menu
+    handleMenuClose(); 
   };
 
   return (

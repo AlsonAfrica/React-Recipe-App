@@ -1,34 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { fetchMeals } from '../Components/mealService';
-import './MealList.css'; // Import the CSS file for styling
-import SearchBarHome from './HomeSearchBar';
+import './MealList.css'; 
+import SearchBarHome from './HomeSearchBar';  // Import SearchBarHome component
 
-const MealList = ({ searchTerm }) => {
+const MealList = () => {
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedMeal, setSelectedMeal] = useState(null); 
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
 
   useEffect(() => {
     const getMeals = async () => {
+      setLoading(true);  // Start loading
       try {
         const mealsData = await fetchMeals(searchTerm);
         setMeals(mealsData);
       } catch (error) {
         console.error('Error fetching meals:', error);
       } finally {
-        setLoading(false);
+        setLoading(false);  // End loading
       }
     };
 
     getMeals();
-  }, [searchTerm]);
+  }, [searchTerm]);  // Trigger the effect when searchTerm changes
 
   const handleImageClick = (meal) => {
-    setSelectedMeal(meal); // Set the selected meal
+    setSelectedMeal(meal); 
   };
 
   const handleCloseModal = () => {
-    setSelectedMeal(null); // Close the modal
+    setSelectedMeal(null); 
+  };
+
+  const handleSearch = (term) => {
+    setSearchTerm(term);  // Update the search term
   };
 
   if (loading) {
@@ -37,7 +43,7 @@ const MealList = ({ searchTerm }) => {
 
   return (
     <div>
-      <SearchBarHome /> {/* Assuming you have a search bar */}
+      <SearchBarHome onSearch={handleSearch} />  {/* Include SearchBarHome and pass handleSearch */}
       <div className="meal-container">
         {meals.length > 0 ? (
           meals.map(meal => (

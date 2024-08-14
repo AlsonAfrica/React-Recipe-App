@@ -3,7 +3,8 @@ import axios from 'axios';
 import {
   Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Divider, Typography,
   useMediaQuery, useTheme, AppBar, Toolbar, TextField, Menu, MenuItem, Box, Collapse, Dialog, 
-  DialogTitle, DialogContent, DialogActions, Button, Select, MenuItem as SelectMenuItem, InputLabel, FormControl
+  DialogTitle, DialogContent, DialogActions, Button, Select, MenuItem as SelectMenuItem, InputLabel, FormControl,
+  CircularProgress, Snackbar, Alert
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import BookIcon from '@mui/icons-material/Book';
@@ -37,12 +38,14 @@ function Sidebar() {
     image: ''  // Change to URL
   });
   const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false); // New state for logout loading
+  const [successMessage, setSuccessMessage] = useState('');
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Optionally, fetch recipes on component mount
     fetchRecipes();
   }, []);
 
@@ -58,10 +61,19 @@ function Sidebar() {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    // Add your logout logic here (e.g., clearing tokens or user data)
+  const handleLogout = async () => {
+    setLogoutLoading(true); // Show loader
+    try {
+      // Add your logout logic here (e.g., clearing tokens or user data)
+      // Simulate logout delay
+      await new Promise(resolve => setTimeout(resolve, 1000)); 
+      navigate('/'); // Redirect to home page
+    } catch (error) {
+      console.error('Error during logout:', error);
+    } finally {
+      setLogoutLoading(false); // Hide loader
+    }
     handleProfileClose();
-    navigate('/'); // Redirect to home page
   };
 
   const handleDinnerClick = () => {
@@ -97,28 +109,28 @@ function Sidebar() {
   };
 
   const handleSave = async () => {
+    setLoading(true); // Show loader
     try {
-      // Prepare the data
       const payload = { ...recipeData };
-
-      // Send a POST request to the API
       await axios.post('http://localhost:5001/recipes', payload, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      
+      setSuccessMessage('Recipe successfully added! Please refresh page if recipe not appearing');
       handleDialogClose();
-      fetchRecipes(); // Optionally refresh recipes list
+      fetchRecipes(); 
     } catch (error) {
       console.error('Error saving recipe:', error);
+    } finally {
+      setLoading(false); // Hide loader
     }
   };
 
   const fetchRecipes = async () => {
     try {
       const response = await axios.get('http://localhost:5001/recipes');
-      console.log(response.data); // Handle the fetched recipes as needed
+      console.log(response.data); 
     } catch (error) {
       console.error('Error fetching recipes:', error);
     }
@@ -186,7 +198,13 @@ function Sidebar() {
             onClose={handleProfileClose}
           >
             <MenuItem onClick={() => { handleProfileClose();}}>Settings</MenuItem>
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            <MenuItem onClick={handleLogout}>
+              {logoutLoading ? (
+                <CircularProgress size={24} sx={{ marginRight: '16px' }} />
+              ) : (
+                'Logout'
+              )}
+            </MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
@@ -211,40 +229,7 @@ function Sidebar() {
           </Typography>
         </Toolbar>
         <Divider />
-        <TextField
-          variant="outlined"
-          placeholder="Search..."
-          fullWidth
-          sx={{ margin: '16px', display: isSmallScreen ? 'none' : 'block' }}
-          InputProps={{
-            startAdornment: <SearchIcon />,
-          }}
-        />
         <List>
-          <ListItem button>
-            <ListItemIcon><BookIcon /></ListItemIcon>
-            <ListItemText primary="Recipes" />
-          </ListItem>
-          <ListItem button onClick={handleDinnerClick}>
-            <ListItemIcon><DinnerDiningIcon /></ListItemIcon>
-            <ListItemText primary="Dinner" />
-            {openDinner ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          <Collapse in={openDinner} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button sx={{ pl: 4 }}>
-                <ListItemText primary="Dessert" />
-              </ListItem>
-              <ListItem button sx={{ pl: 4 }}>
-                <ListItemText primary="Main Course" />
-              </ListItem>
-            </List>
-          </Collapse>
-          <ListItem button onClick={handleLunchClick}>
-            <ListItemIcon><LunchDiningIcon /></ListItemIcon>
-            <ListItemText primary="Lunch" />
-            {openLunch ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
           <Collapse in={openLunch} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <ListItem button sx={{ pl: 4 }}>
@@ -347,16 +332,31 @@ function Sidebar() {
           {imagePreview && (
             <img src={imagePreview} alt="Image Preview" style={{ width: '100%', marginTop: '16px' }} />
           )}
+          {loading && <CircularProgress sx={{ display: 'block', marginTop: '16px' }} />}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleSave} color="primary">
+          <Button onClick={handleSave} color="primary" disabled={loading}>
             Save
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar
+        open={Boolean(successMessage)}
+        autoHideDuration={6000}
+        onClose={() => setSuccessMessage('')}
+        message={successMessage}
+        action={
+          <Button color="inherit" onClick={() => setSuccessMessage('')}>Close</Button>
+        }
+      >
+        <Alert onClose={() => setSuccessMessage('')} severity="success">
+          {successMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

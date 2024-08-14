@@ -89,7 +89,31 @@
       "username": "Neo",
       "email": "Neo@gmail.com",
       "password": "123"
+    },
+    {
+      "id": "f871",
+      "username": "Nhlakanipho",
+      "email": "nradebe@gmail.com",
+      "password": "123"
+    },
+    {
+      "id": "429b",
+      "username": "Nipho",
+      "email": "nhlakanipho@gmail.com",
+      "password": "123"
     }
   ],
-  "recipes": []
+  "recipes": [
+    {
+      "id": "ea27",
+      "name": "123",
+      "category": "Dinner",
+      "ingredients": "1.Sugar, 2.Water, 3.Salt",
+      "instructions": "123",
+      "preparationTime": "123",
+      "cookingTime": "123",
+      "servings": "2",
+      "image": "https://www.foodiesfeed.com/wp-content/uploads/2023/06/burger-with-melted-cheese.jpg"
+    }
+  ]
 }

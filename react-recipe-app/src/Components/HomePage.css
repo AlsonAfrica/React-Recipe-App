@@ -2,6 +2,7 @@
     margin: 0;
     padding:0;
     box-sizing: border-box;
+    /* overflow-y: hidden; */
 }
 /* .nav{
     height:90px
@@ -30,13 +31,17 @@ width:100vw;
 }
 .Text-api h1{
     font-size:80px ;
+    color: chocolate;
 }
 .Text-api p{
     font-size:30px;
+    color:chocolate;
 }
+
 .api-list{
     display: flex;
     flex-direction: column;
+    margin-top: 20px;
 }
 
 /* Review Card styling */
@@ -52,9 +57,39 @@ width:100vw;
     margin-top: 50px;
     height:250px;
     background-color: black;
+    /* overflow-y: hidden; */
 }
+/* Define the keyframes for the animation */
+@keyframes colorChange {
+    0% {
+      color: black; /* Starting color */
+    }
+    50% {
+      color: chocolate; /* Middle color */
+    }
+    100% {
+      color: cadetblue; /* Ending color */
+    }
+  }
+  
+  /* Apply the animation to the span element */
+  span {
+    animation: colorChange 3s infinite; /* Animation name, duration, and iteration */
+  }
+  
+  .Review-cards h2{
+    color:chocolate;
+    text-decoration: underline;
+  }
 
 /* .container{
      height: 10%;
      background-color: azure;
 } */
+
+@media only screen and (max-width: 600px) {
+    .Review-list-ctn {
+         display: flex;
+         flex-direction: row;
+    }
+  }

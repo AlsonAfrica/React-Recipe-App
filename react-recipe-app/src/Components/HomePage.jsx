@@ -7,6 +7,7 @@ import SearchBarHome from "./HomeSearchBar";
 import MealList from "./MealList";
 import ReviewList from "./ReviewList";
 import Footer from "./footer";
+import { MdOutlineReviews } from "react-icons/md";
 
 export const HomePage = () => {
     return (
@@ -26,8 +27,9 @@ export const HomePage = () => {
                     <div className="api-list"><MealList/></div>
                 </div>
                 <div className="Review-cards">
-                    <h2>Get to hear what our users get to say</h2>
-                    <ReviewList/>
+                    <h2>Get to hear what our users have to say <MdOutlineReviews /></h2>
+                    <div className="Review-list-ctn"><ReviewList/></div>
+                    
                 </div>
             </div>
             <Footer/>
