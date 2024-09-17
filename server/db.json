@@ -101,12 +101,30 @@
       "username": "Nipho",
       "email": "nhlakanipho@gmail.com",
       "password": "123"
+    },
+    {
+      "id": "2d9c",
+      "username": "Prince",
+      "email": "Prince@gmail.com",
+      "password": "123"
+    },
+    {
+      "id": "aa24",
+      "username": "Xoli",
+      "email": "Xoli@gmail.com",
+      "password": "123"
+    },
+    {
+      "id": "2aef",
+      "username": "Neo",
+      "email": "Neo@gmail.com",
+      "password": "123"
     }
   ],
   "recipes": [
     {
       "id": "ea27",
-      "name": "123",
+      "name": "Burger",
       "category": "Dinner",
       "ingredients": "1.Sugar, 2.Water, 3.Salt",
       "instructions": "123",

@@ -5,7 +5,7 @@ const SearchBarHome = ({ onSearch }) => {
   const [input, setInput] = useState('');
 
   const handleSearch = () => {
-    onSearch(input);  // Pass the input to the onSearch function
+    onSearch(input);  
   };
 
   return (

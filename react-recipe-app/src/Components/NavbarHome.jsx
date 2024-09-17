@@ -28,7 +28,7 @@ function NavbarHome() {
   const [openDialog, setOpenDialog] = useState(false);
   const [openTermsDialog, setOpenTermsDialog] = useState(false);
   const [openAuthDialog, setOpenAuthDialog] = useState(false);
-  const [openSuccessDialog, setOpenSuccessDialog] = useState(false); // New state for success dialog
+  const [openSuccessDialog, setOpenSuccessDialog] = useState(false); 
   const [newColor, setNewColor] = useState('#ffffff');
   const [authTab, setAuthTab] = useState(0);
   const [username, setUsername] = useState('');
@@ -318,7 +318,7 @@ function NavbarHome() {
       </Dialog>
 
       {/* Dialog for authentication */}
-      <Dialog open={openAuthDialog} onClose={handleAuthClose}>
+      <Dialog open={openAuthDialog} onClose={handleAuthClose} sx={{textAlign:"center"}}>
         <DialogTitle>Authentication</DialogTitle>
         <DialogContent>
           <Tabs
@@ -406,7 +406,7 @@ function NavbarHome() {
 
       {/* Dialog for success message */}
       <Dialog open={openSuccessDialog} onClose={() => setOpenSuccessDialog(false)}>
-        <DialogTitle>Success</DialogTitle>
+        <DialogTitle >Success</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
             {successMessage}
