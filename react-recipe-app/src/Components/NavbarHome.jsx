@@ -132,23 +132,30 @@ function NavbarHome() {
     setErrorMessage('');
 
     try {
-      const response = await axios.get(`https://react-recipe-server.onrender.com/users?username=${loginUsername}&password=${loginPassword}`);
-      if (response.data.length > 0) {
+      const response = await axios.post('https://react-recipe-server.onrender.com/auth/login', {
+        username: loginUsername,
+        password: loginPassword
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
         setSuccessMessage('Login successful!');
         setLoginUsername('');
         setLoginPassword('');
-        setOpenSuccessDialog(true); // Open success dialog
+        setOpenSuccessDialog(true);
         navigate('/LandingPage');
-      } else {
-        setErrorMessage('Incorrect username or password. Please try again.');
       }
     } catch (error) {
       console.error('Error logging in:', error);
-      setErrorMessage('Failed to log in. Please try again.');
+      setErrorMessage(error.response?.data?.message || 'Invalid credentials.');
     } finally {
       setLoading(false);
     }
-  };
+};
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
