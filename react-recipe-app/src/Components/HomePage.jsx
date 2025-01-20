@@ -3,10 +3,10 @@ import './HomePage.css';
 import NavbarHome from "./NavbarHome";
 import './NavbarHome.css';
 import HeroSection from "./HeroSection";
-import SearchBarHome from "./HomeSearchBar";
 import MealList from "./MealList";
 import ReviewList from "./ReviewList";
-import Footer from "./footer";
+import Footer from "./Footer";
+
 import { MdOutlineReviews } from "react-icons/md";
 
 export const HomePage = () => {
