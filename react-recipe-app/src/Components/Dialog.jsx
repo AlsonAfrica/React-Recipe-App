@@ -3,7 +3,7 @@ const handleRegister = async () => {
     setSuccessMessage(''); // Reset success message
   
     try {
-      await axios.post('http://localhost:5001/users', {
+      await axios.post('https://react-recipe-server.onrender.com/users', {
         username,
         email,
         password
