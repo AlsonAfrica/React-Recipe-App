@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, IconButton, Typography, TextField, Menu, MenuItem } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, TextField, Menu, MenuItem, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
@@ -17,7 +17,6 @@ function Navbar() {
   };
 
   const handleSettingsClick = () => {
-
     setBgColor(bgColor === '#ffffff' ? '#f0f0f0' : '#ffffff');
     handleMenuClose(); 
   };
@@ -33,35 +32,42 @@ function Navbar() {
         right: 0 
       }}
     >
-      <Toolbar>
+      <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
         {/* Logo */}
-        <Typography variant="h6" component="div" style={{ flexGrow: 1, cursor: 'pointer' }}>
+        <Typography variant="h6" component="div" style={{ cursor: 'pointer' }}>
           Recipe App
         </Typography>
 
-        {/* Search Bar */}
-        <TextField
-          variant="outlined"
-          placeholder="Search recipes..."
-          InputProps={{
-            startAdornment: <SearchIcon />,
+        {/* Search Bar (Centered for Large Screens) */}
+        <Box 
+          sx={{
+            flexGrow: 1,
+            display: { xs: 'none', md: 'flex' },
+            justifyContent: 'center',
           }}
-          style={{ marginRight: '16px', width: '100px' }}
-        />
+        >
+          <TextField
+            variant="outlined"
+            placeholder="Search recipes..."
+            InputProps={{
+              startAdornment: <SearchIcon />,
+            }}
+            style={{ width: '300px' }}
+          />
+        </Box>
 
         {/* User Menu */}
         <IconButton
           edge="end"
           color="inherit"
           onClick={handleMenuClick}
-          style={{ marginLeft: 'auto' }}
         >
           <AccountCircle />
         </IconButton>
 
         <Menu
           anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
+          open={open}
           onClose={handleMenuClose}
           PaperProps={{
             style: {
@@ -78,6 +84,3 @@ function Navbar() {
 }
 
 export default Navbar;
-
-
-
