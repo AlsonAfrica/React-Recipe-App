@@ -101,7 +101,7 @@ function NavbarHome() {
     setErrorMessage('');
 
     try {
-      await axios.post('http://localhost:5001/users', {
+      await axios.post('http://localhost:8000/users', {
         username,
         email,
         password
@@ -132,7 +132,7 @@ function NavbarHome() {
     setErrorMessage('');
 
     try {
-      const response = await axios.get(`http://localhost:5001/users?username=${loginUsername}&password=${loginPassword}`);
+      const response = await axios.get(`http://localhost:8000/users?username=${loginUsername}&password=${loginPassword}`);
       if (response.data.length > 0) {
         setSuccessMessage('Login successful!');
         setLoginUsername('');
