@@ -13,6 +13,9 @@ The Recipe App is a dynamic web application built using React, Vite, and Materia
 * Authentication and Authorization allowing users to add and view their own recipes on the homepage. unauthorized users are able to interact with the landing page to view recipes.
 * Users are able to do the following in the home page - Create,Add, Delete,Edit and Save their recipes.
 
+## Interphase
+![image](https://github.com/user-attachments/assets/ebd099b7-3713-43bc-8bf6-b86e5d7be4ff)
+
   ## Technologies Used
 * React: JavaScript library for building user interfaces.
 * Vite: Build tool that provides a fast development environment.
