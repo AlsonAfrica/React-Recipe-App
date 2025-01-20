@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Card, CardMedia } from '@mui/material';
 import vegan from "../Image-Grid/Vegan.jpg";
 import Meaty from "../Image-Grid/Meaty.jpg";
-import Drink from "../Image-Grid/Drink.jpg";
+import Drink from "../Image-Grid/drink.jpg";
 import Appitizer from "../Image-Grid/Appitizer.jpg"
 
 const PhotoLayout = () => {
