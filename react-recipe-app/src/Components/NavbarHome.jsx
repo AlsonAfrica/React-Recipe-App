@@ -101,7 +101,7 @@ function NavbarHome() {
     setErrorMessage('');
 
     try {
-      await axios.post('http://localhost:8000/users', {
+      await axios.post('http://localhost:5001/users', {
         username,
         email,
         password
