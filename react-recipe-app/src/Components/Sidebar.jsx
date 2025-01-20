@@ -112,7 +112,7 @@ function Sidebar() {
     setLoading(true); // Show loader
     try {
       const payload = { ...recipeData };
-      await axios.post('http://localhost:5001/recipes', payload, {
+      await axios.post('https://react-recipe-server.onrender.com/recipes', payload, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -129,7 +129,7 @@ function Sidebar() {
 
   const fetchRecipes = async () => {
     try {
-      const response = await axios.get('http://localhost:5001/recipes');
+      const response = await axios.get('https://react-recipe-server.onrender.com/recipes');
       console.log(response.data); 
     } catch (error) {
       console.error('Error fetching recipes:', error);

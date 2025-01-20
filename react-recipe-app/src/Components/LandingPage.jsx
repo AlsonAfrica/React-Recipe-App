@@ -12,7 +12,7 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/recipes');
+        const response = await axios.get('https://react-recipe-server.onrender.com/recipes');
         setRecipes(response.data);
       } catch (error) {
         console.error('Error fetching recipes:', error);
@@ -25,7 +25,7 @@ const LandingPage = () => {
   // Function to handle form submission and add new recipes
   const handleFormSubmit = async (data) => {
     try {
-      const response = await axios.post('http://localhost:5001/recipes', data);
+      const response = await axios.post('https://react-recipe-server.onrender.com/recipes', data);
       setRecipes((prevRecipes) => [...prevRecipes, response.data]);
     } catch (error) {
       console.error('Error adding recipe:', error);
@@ -35,7 +35,7 @@ const LandingPage = () => {
   // Function to handle saving updates to a recipe
   const handleSave = async (updatedData) => {
     try {
-      const response = await axios.put(`http://localhost:5001/recipes/${updatedData.id}`, updatedData);
+      const response = await axios.put(`https://react-recipe-server.onrender.com/recipes/${updatedData.id}`, updatedData);
       setRecipes((prevRecipes) =>
         prevRecipes.map((recipe) => (recipe.id === updatedData.id ? response.data : recipe))
       );
@@ -47,7 +47,7 @@ const LandingPage = () => {
   // Function to handle deleting a recipe
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5001/recipes/${id}`);
+      await axios.delete(`https://react-recipe-server.onrender.com/recipes/${id}`);
       setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe.id !== id));
     } catch (error) {
       console.error('Error deleting recipe:', error);
